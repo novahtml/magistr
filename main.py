@@ -102,6 +102,16 @@ err_train = np.mean(y_train != y_train_predict)
 err_test  = np.mean(y_test  != y_test_predict)
 print (err_train, err_test)
 
+# SVC – машина опорных векторов- любит нормализации количественных признаков
+from sklearn.svm import SVC
+svc = SVC()
+svc.fit(X_train, y_train)
+
+err_train = np.mean(y_train != svc.predict(X_train))
+err_test  = np.mean(y_test  != svc.predict(X_test))
+print (err_train, err_test)
+
+
 # Метод дерева решений
 from sklearn import tree
 
