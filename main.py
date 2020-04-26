@@ -111,14 +111,14 @@ from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier()
 knn.fit(X_train, y_train)
 
-print('Точность прогноза на тестовом наборе: ', knn.score(X_test,y_test))
+print('Метод ближайших соседей - точность прогноза на тестовом наборе: ', knn.score(X_test,y_test))
 
 # SVC – машина опорных векторов- любит нормализации количественных признаков
 from sklearn.svm import SVC
 svc = SVC(gamma='auto')
 svc.fit(X_train, y_train)
 
-print('Точность прогноза на тестовом наборе: ', svc.score(X_test,y_test))
+print('Машина опорных векторов - точность прогноза на тестовом наборе: ', svc.score(X_test,y_test))
 
 
 # Метод дерева решений
@@ -127,7 +127,7 @@ from sklearn import tree
 tree_model = tree.DecisionTreeClassifier(max_depth=4)
 tree_model.fit(X_train, y_train)
 
-print('Точность прогноза на тренировочном наборе: ', tree_model.score(X_test,y_test))
+print('Дерево решений - точность прогноза на тестовом наборе: ', tree_model.score(X_test,y_test))
 
 import graphviz 
 from sklearn.tree import export_graphviz
@@ -147,7 +147,7 @@ from sklearn import ensemble
 rf = ensemble.RandomForestClassifier(n_estimators=100, random_state=10)
 rf.fit(X_train, y_train)
 
-print('Точность прогноза на тренировочном наборе: ', rf.score(X_test,y_test))
+print('Случайный лес - точность прогноза тестовом наборе: ', rf.score(X_test,y_test))
 
 
 
