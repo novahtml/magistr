@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from pandas.plotting import scatter_matrix
 
 data = pd.read_csv('data_learn.csv', header=0, na_values='?', delimiter=';')
 
@@ -15,34 +16,44 @@ print('Первые пять строк:\n', data.head())
 # и верхнего (75%) квартилей:
 print('Разбивка по числовым данным:\n',data.describe(), '\n')
 
-# Добавил код получения целевого признака и др признаков надо сделать его уже в csv файле
-data['target'] = np.random.randint(0, 2, data.shape[0])
-data['Исполнительность/ дисциплинированность'] = np.random.randint(0, 11, data.shape[0])
-data['Коммуникабельность'] = np.random.randint(0, 11, data.shape[0])
-data['Стрессоустойчивость'] = np.random.randint(0, 11, data.shape[0])
-data['Лидерство'] = np.random.randint(0, 11, data.shape[0])
-data['Порядочность/ честность'] = np.random.randint(0, 11, data.shape[0])
-data['Энергичность'] = np.random.randint(0, 11, data.shape[0])
+# Диаграмма расеивания для признаков 'Рабочий стаж (лет)' и 'Наличие правонарушений/ судимостей'
+col1 = 'Рабочий стаж (лет)'
+col2 = 'Наличие правонарушений/ судимостей'
 
+plt.figure(figsize=(10, 6))
+
+plt.scatter(data[col1][data['Кандидат на увольнение'] == 1],
+            data[col2][data['Кандидат на увольнение'] == 1],
+            alpha=0.75,
+            color='red',
+            label='1')
+
+plt.scatter(data[col1][data['Кандидат на увольнение'] == 0],
+            data[col2][data['Кандидат на увольнение'] == 0],
+            alpha=0.75,
+            color='blue',
+            label='0')
+
+plt.xlabel(col1)
+plt.ylabel(col2)
+plt.legend(loc='best');
 
 # ГОТОВИМ ДАННЫЕ
 # Алгоритмы машинного обучения из библиотеки scikit-learn не работают напрямую с категориальными признаками и данными, 
 # в которых имеются пропущенные значения. Поэтому вначале подготовим наши данные
 
-#Нам не нужны ФИО, дата рождения выкинем их
+#Убираем не нужые столбцы
 X = data.drop('ФИО', axis='columns') 
 X = X.drop('Дата рождения', axis='columns') 
 X = X.drop('ID', axis='columns') 
 X = X.drop('Семейное положение', axis='columns') 
 X = X.drop('Отдел', axis='columns') 
 X = X.drop('Должность', axis='columns') 
-X = X.drop('Наличие правонарушений/ судимостей', axis='columns') 
-X = X.drop('Трудовые заслуги', axis='columns') 
+X = X.drop('Дети', axis='columns') 
 X = X.drop('Образование', axis='columns') 
-#X = X.drop('Дополнительная квалификация', axis='columns') 
+
 #Посмотрим заполнение признаков
 print(X.count(axis=0))
-
 
 # Категориальные признаки
 categorical_columns = [c for c in X.columns if X[c].dtype.name == 'object']
@@ -50,41 +61,46 @@ print('Категориальные признаки:',categorical_columns, '\n'
 
 # Числовые признаки
 numerical_columns   = [c for c in X.columns if X[c].dtype.name != 'object']
-print('Числовые признаки:',numerical_columns)
+print('Числовые признаки: ',numerical_columns)
 
 # Приведем категорилаьные признаки к числовому варианту
-# Вначале выделим бинарные и небинарные признаки
-X_describe = X.describe(include=[object])
-binary_columns    = [c for c in categorical_columns if X_describe[c]['unique'] == 2]
-nonbinary_columns = [c for c in categorical_columns if X_describe[c]['unique'] > 2]
-print ('Бинарные признаки: ',binary_columns, '\n', 'Не бинарные признаки: ',nonbinary_columns)
+X[categorical_columns].describe()
+# Категориалные признаки бинарного типа, приведем их к числовому варианту
 
 #Преобразуем 'Дополнительная квалификация' в числ столбец если она есть то 1 нету 0
 X.at[X['Дополнительная квалификация'] == 'Нет', 'Дополнительная квалификация'] = 0
 X.at[X['Дополнительная квалификация'] != 0, 'Дополнительная квалификация'] = 1
-print (X['Дополнительная квалификация'].head())
+
 
 #Преобразуем 'Наличие выговоров по трудовой дисциплине' в числ столбец если она есть то 1 нету 0
 X.at[X['Наличие выговоров по трудовой дисциплине'] == 'Нет', 'Наличие выговоров по трудовой дисциплине'] = 0
 X.at[X['Наличие выговоров по трудовой дисциплине'] != 0, 'Наличие выговоров по трудовой дисциплине'] = 1
-print (X['Наличие выговоров по трудовой дисциплине'].head())
 
 
-#X_nonbinary = pd.get_dummies(X[nonbinary_columns])
-#print (X_nonbinary.columns)
-
-# Соединим обработанные данные вместе
-#X = pd.concat((X[numerical_columns], X[binary_columns], X_nonbinary), axis=1)
-#X = pd.DataFrame(X, dtype=float)
+#Преобразуем 'Наличие правонарушений/ судимостей' в числ столбец если она есть то 1 нету 0
+X.at[X['Наличие правонарушений/ судимостей'] == 'Нет', 'Наличие правонарушений/ судимостей'] = 0
+X.at[X['Наличие правонарушений/ судимостей'] != 0, 'Наличие правонарушений/ судимостей'] = 1
 
 
-#Разделим данные на целевой признак и все отсальные данные
-X = X.drop('target', axis='columns') 
-y = data['target']
+#Преобразуем 'Наличие правонарушений/ судимостей' в числ столбец если она есть то 1 нету 0
+X.at[X['Трудовые заслуги'] == 'Нет', 'Трудовые заслуги'] = 0
+X.at[X['Трудовые заслуги'] != 0, 'Трудовые заслуги'] = 1
+
+#Из построенных диаграмм видно, что признаки не сильно коррелируют между собой, 
+#что впрочем можно также легко установить, посмотрев на корреляционную матрицу. 
+#Все ее недиагональные значения по модулю не превосходят 0.4:
+matrix = X.copy()
+matrix.columns = ['Col' + str(i) for i in range(1, 13)] 
+
+print(matrix.corr())
+
+# Выделим целевой признак отдельно
+X = X.drop('Кандидат на увольнение', axis='columns') 
+y = data['Кандидат на увольнение']
 
 #Делим данные на обучающую выборку и тестовую 70 на 30 процентов
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 11)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 11)
 
 N_train, _ = X_train.shape 
 N_test,  _ = X_test.shape 
@@ -95,43 +111,43 @@ from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier()
 knn.fit(X_train, y_train)
 
-y_train_predict = knn.predict(X_train)
-y_test_predict = knn.predict(X_test)
-
-err_train = np.mean(y_train != y_train_predict)
-err_test  = np.mean(y_test  != y_test_predict)
-print (err_train, err_test)
+print('Точность прогноза на тестовом наборе: ', knn.score(X_test,y_test))
 
 # SVC – машина опорных векторов- любит нормализации количественных признаков
 from sklearn.svm import SVC
-svc = SVC()
+svc = SVC(gamma='auto')
 svc.fit(X_train, y_train)
 
-err_train = np.mean(y_train != svc.predict(X_train))
-err_test  = np.mean(y_test  != svc.predict(X_test))
-print (err_train, err_test)
+print('Точность прогноза на тестовом наборе: ', svc.score(X_test,y_test))
 
 
 # Метод дерева решений
 from sklearn import tree
 
-model = tree.DecisionTreeClassifier(criterion="entropy", max_depth=4)
+tree_model = tree.DecisionTreeClassifier(max_depth=4)
+tree_model.fit(X_train, y_train)
 
-model.fit(X_train, y_train)
+print('Точность прогноза на тренировочном наборе: ', tree_model.score(X_test,y_test))
 
-y_train_predict = model.predict(X_train)
-y_test_predict = model.predict(X_test)
+import graphviz 
+from sklearn.tree import export_graphviz
+dot_data = tree.export_graphviz(tree_model, out_file=None) 
+graph = graphviz.Source(dot_data) 
+graph.render("tree_model")
 
-err_train = np.mean(y_train != y_train_predict)
-err_test  = np.mean(y_test  != y_test_predict)
-print (err_train, err_test)
+tree.plot_tree(tree_model.fit(X, y)) 
+dot_data = tree.export_graphviz(tree_model, out_file=None, 
+filled=True, rounded=True,  
+ special_characters=True)  
+graph = graphviz.Source(dot_data)  
+graph 
 
 # Случайный лес
 from sklearn import ensemble
-rf = ensemble.RandomForestClassifier(n_estimators=100, random_state=11)
+rf = ensemble.RandomForestClassifier(n_estimators=100, random_state=10)
 rf.fit(X_train, y_train)
 
-err_train = np.mean(y_train != rf.predict(X_train))
-err_test  = np.mean(y_test  != rf.predict(X_test))
-print (err_train, err_test)
+print('Точность прогноза на тренировочном наборе: ', rf.score(X_test,y_test))
+
+
 
