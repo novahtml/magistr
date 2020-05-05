@@ -1,0 +1,38 @@
+Надо запустить командную строку и перейти в папку где будет устанавливаться проект
+
+Установка виртуальной среды:
+python -m venv env
+
+Активация виртуальной среды:
+путь до вирт среды\env\Scripts\activate
+
+Установка библиотек для работы веб приложения на Django
+pip install django==2.2
+pip install scikit-learn
+
+Установка проекта Django
+django-admin startproject hrhelp
+
+Добавление в проект приложения эффективности работы сотрудника
+python manage.py startapp efficiency
+
+Настройка проекта settings.py
+INSTALLED_APPS добавляем наше приложение efficiency
+TIME_ZONE меняем на 'Europe/Moscow'
+DEBUG = True пока оставляем так потом выключим
+TEMPLATES вс список 'DIRS' добавим путь к шаблонам для всего приложения os.path.join(BASE_DIR, 'templates')
+Статич файлы(css,js и др) будут лежать в корне в папке static: 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+Будем использовать встроенную базу данных SQlite
+Создадим структуру приложения в этой бд
+python manage.py makemigrations
+python manage.py migrate
+
+Подключим администратора приложения
+python manage.py createsuperuser
+Username: admin
+Password: admin123
+

@@ -131,23 +131,21 @@ print('Дерево решений - точность прогноза на те
 
 import graphviz 
 from sklearn.tree import export_graphviz
-dot_data = tree.export_graphviz(tree_model, out_file=None) 
-graph = graphviz.Source(dot_data) 
+dot_data = tree.export_graphviz(tree_model, out_file=None,
+filled=True, rounded=True, special_characters=True,class_names=True)
+graph = graphviz.Source(dot_data)
+#сохранение диграммы дерева pdf
 graph.render("tree_model")
 
-tree.plot_tree(tree_model.fit(X, y)) 
-dot_data = tree.export_graphviz(tree_model, out_file=None, 
-filled=True, rounded=True,  
- special_characters=True)  
-graph = graphviz.Source(dot_data)  
-graph 
 
-# Случайный лес
-from sklearn import ensemble
-rf = ensemble.RandomForestClassifier(n_estimators=100, random_state=10)
-rf.fit(X_train, y_train)
+# Сохранение обученной модели дерева решений, для последующего предсказывания целевого признака без повторного обучения 
+from sklearn.externals import joblib
 
-print('Случайный лес - точность прогноза тестовом наборе: ', rf.score(X_test,y_test))
+joblib.dump(tree_model, 'tree_model.sav')
+
+# Проверка корректности сохраненной модели
+joblib_model = joblib.load('tree_model.sav')
+print('Дерево решений(сохраненная модель) - точность прогноза на тестовом наборе: ', joblib_model.score(X_test,y_test))
 
 
 

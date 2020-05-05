@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+	{% block title %}
+		Главаная страница
+	{% endblock %}
+
+  	{% block content %}
+		{% if user.is_anonymous %}
+			<h1>HrHelper</h1>
+		{% else %}
+
+			<form>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">ФИО</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="text" name="username">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Должность</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="text"  name="username">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Рабочий стаж</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+
+			  	<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Исполнительность</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Коммуникабельность</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Стрессоустойчивость</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Лидерство</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Порядочность</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-group row">
+				  <label class="col-md-2 col-form-label">Энергичность</label>
+				  <div class="col-md-6">
+					<input class="form-control" type="number" value="0" id="example-number-input">
+				  </div>
+				</div>
+				<div class="form-check" style="margin:10px 0px">
+				  <label class="form-check-label">
+					<input class="form-check-input" type="checkbox" value="">
+					Наличие судимостей
+				  </label>
+				</div>
+				<div class="form-check" style="margin:10px 0px">
+				  <label class="form-check-label">
+					<input class="form-check-input" type="checkbox" value="">
+					Наличие выговоров
+				  </label>
+				</div>
+				<div class="form-check" style="margin:10px 0px">
+				  <label class="form-check-label">
+					<input class="form-check-input" type="checkbox" value="">
+					Трудовые заслуги
+				  </label>
+				</div>
+			  <button type="submit" class="btn btn-primary" style="margin:10px 0px">Отправить</button>
+			</form>
+		{% endif %}
+
+  	{% endblock %}
