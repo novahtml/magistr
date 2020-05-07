@@ -124,7 +124,7 @@ print('Машина опорных векторов - точность прог�
 # Метод дерева решений
 from sklearn import tree
 
-tree_model = tree.DecisionTreeClassifier(max_depth=4)
+tree_model = tree.DecisionTreeClassifier(max_depth=2)
 tree_model.fit(X_train, y_train)
 
 print('Дерево решений - точность прогноза на тестовом наборе: ', tree_model.score(X_test,y_test))
@@ -146,6 +146,7 @@ joblib.dump(tree_model, 'tree_model.sav')
 # Проверка корректности сохраненной модели
 joblib_model = joblib.load('tree_model.sav')
 print('Дерево решений(сохраненная модель) - точность прогноза на тестовом наборе: ', joblib_model.score(X_test,y_test))
+
 
 
 

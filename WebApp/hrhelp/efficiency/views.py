@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.template.context_processors import csrf
 from django.contrib import auth
 from django.http import HttpResponseRedirect
+from sklearn.externals import joblib
 
 def index(request):
 	return render(request,'main/main.html')
@@ -26,3 +27,49 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect("/")
+
+def efficiency(request):
+    uvolnenie = None
+    percent = None
+    if request.method == 'POST':
+        fio = request.POST.get("name")
+        position = request.POST.get("position")
+        workyears = int(request.POST.get("workyears"))
+        ispolnitel = int(request.POST.get("ispolnitel"))
+        communication = int(request.POST.get("communication"))
+        stress = int(request.POST.get("stress"))
+        lider = int(request.POST.get("lider"))
+        poryadochnost = int(request.POST.get("poryadochnost"))
+        energy = int(request.POST.get("energy"))
+        syd = request.POST.get("syd")
+        if syd == None:
+            syd = 0
+        else:
+            syd = 1
+        vigovor = request.POST.get("vigovor")
+        if vigovor == None:
+            vigovor = 0
+        else:
+            vigovor = 1
+        zaslugi = request.POST.get("zaslugi")
+        if zaslugi == None:
+            zaslugi = 0
+        else:
+            zaslugi = 1
+        dopobraz = request.POST.get("dopobraz")
+        if dopobraz == None:
+            dopobraz = 0
+        else:
+            dopobraz = 1
+        tree_model = joblib.load('efficiency/data/tree_model.sav')
+
+        data = [[workyears,syd,vigovor,zaslugi,dopobraz,ispolnitel,communication,stress,lider,poryadochnost,energy]]
+        uvolnenie = tree_model.predict(data)
+        percent = tree_model.predict_proba(data)
+        if uvolnenie == 1:
+            uvolnenie = 'Уволить'
+            percent = percent[0][1]
+        else:
+            uvolnenie = 'Не увольнять'
+            percent = percent[0][0]
+    return render(request, 'main/main.html', {'uvolnenie': uvolnenie, 'percent': percent})
