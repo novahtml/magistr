@@ -14,89 +14,105 @@
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">ФИО</label>
 				  <div class="col-md-6">
-					<input name="fio" class="form-control" type="text">
+					<input name="fio" class="form-control" type="text" value="{{form_dict.fio}}">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Должность</label>
 				  <div class="col-md-6">
-					<input name="position" class="form-control" type="text">
+					<input name="position" class="form-control" type="text" value="{{form_dict.position}}">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Рабочий стаж</label>
 				  <div class="col-md-6">
-					<input name="workyears" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="workyears" class="form-control" type="number" value="{{form_dict.workyears}}" id="example-number-input">
 				  </div>
 				</div>
 
 			  	<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Исполнительность</label>
 				  <div class="col-md-6">
-					<input name="ispolnitel" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="ispolnitel" class="form-control" type="number" value="{{form_dict.ispolnitel}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Коммуникабельность</label>
 				  <div class="col-md-6">
-					<input name="communication" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="communication" class="form-control" type="number" value="{{form_dict.communication}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Стрессоустойчивость</label>
 				  <div class="col-md-6">
-					<input name="stress" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="stress" class="form-control" type="number" value="{{form_dict.stress}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Лидерство</label>
 				  <div class="col-md-6">
-					<input name="lider" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="lider" class="form-control" type="number" value="{{form_dict.lider}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Порядочность</label>
 				  <div class="col-md-6">
-					<input name="poryadochnost" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="poryadochnost" class="form-control" type="number" value="{{form_dict.poryadochnost}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-group row">
 				  <label class="col-md-2 col-form-label">Энергичность</label>
 				  <div class="col-md-6">
-					<input name="energy" class="form-control" type="number" value="0" id="example-number-input">
+					<input name="energy" class="form-control" type="number" value="{{form_dict.energy}}" id="example-number-input">
 				  </div>
 				</div>
 				<div class="form-check" style="margin:10px 0px">
 				  <label class="form-check-label">
-					<input name="syd" class="form-check-input" type="checkbox">
+					<input name="syd" class="form-check-input" type="checkbox" {% if form_dict.syd != None %} checked {%endif%}>
 					Наличие судимостей
 				  </label>
 				</div>
 				<div class="form-check" style="margin:10px 0px">
 				  <label class="form-check-label">
-					<input name="vigovor" class="form-check-input" type="checkbox" value="">
+					<input name="vigovor" class="form-check-input" type="checkbox" {% if form_dict.vigovor != None %} checked {%endif%}>
 					Наличие выговоров
 				  </label>
 				</div>
 				<div class="form-check" style="margin:10px 0px">
 				  <label class="form-check-label">
-					<input name="zaslugi" class="form-check-input" type="checkbox" value="">
+					<input name="zaslugi" class="form-check-input" type="checkbox" {% if form_dict.zaslugi != None %} checked {%endif%}>
 					Трудовые заслуги
 				  </label>
 				</div>
 				<div class="form-check" style="margin:10px 0px">
 				  <label class="form-check-label">
-					<input name="dopobraz" class="form-check-input" type="checkbox" value="">
+					<input name="dopobraz" class="form-check-input" type="checkbox" {% if form_dict.dopobraz != None %} checked {%endif%}>
 					Дополнительная квалификация
 				  </label>
 				</div>
 			  <button type="submit" class="btn btn-primary" style="margin:10px 0px">Отправить</button>
 			</form>
-		{% if percent != None %}
-			{{uvolnenie}}
-			{{percent}}
-		{% endif %}
+			{% if percent != None %}
+				<h3>Результат исследования</h3>
+				<div class="col-md-12">
+					{% if uvolnenie == 0 %}
+						{% if percent > 80 %}
+							<div class="alert alert-success" role="alert"> Точно не увольнять. Программа посчитала что на {{percent}}% сотрудник подходит для продолжения работы.
+						{% elif percent < 80  %}
+							<div class="alert alert-warning" role="alert"> Увольнение возможно. Программа посчитала что на {{percent}}% сотрудник подходит для продолжения работы.
+						{% endif %}
+					{% else %}
+						{% if percent > 80 %}
+							<div class="alert alert-danger" role="alert"> Точно увольнять. Программа посчитала что на {{percent}}% сотрудник не подходит для продолжения работы.
+						{% elif percent < 80  %}
+							<div class="alert alert-warning" role="alert"> Увольнение возможно. Программа посчитала что на {{percent}}% сотрудник не подходит для продолжения работы.
+						{% endif %}
+					{% endif %}
 
+
+					</div>
+				</div>
+			{% endif %}
 		{% endif %}
 
   	{% endblock %}
